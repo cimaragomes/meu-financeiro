@@ -14,24 +14,26 @@ public class TituloController {
 		this.result = result;		
 	}
 	
-	public void incluir() {
-		Titulo titulo = new Titulo();
-		titulo.setId(TituloDAO.get().size() + 1);
+	public void add() {
 		
+	}
+	
+	public void incluir(Titulo titulo) {
 		TituloDAO.add(titulo);
+		
 		System.out.println("Título incluido com sucesso!");
 	}	
 	
+	public void exibir(String descricao) {
+		for (Titulo titulo : TituloDAO.get()) {
+			if (titulo.getDescricao().equals(descricao)) {
+				result.include("titulo", titulo);
+				break;
+			}
+		}
+	}
+	
 	public void listagem() {
-		Integer i = TituloDAO.get().size();
-		
-		Titulo ultimoTitulo = TituloDAO.get().get(i-1); 
-		
-		System.out.println(ultimoTitulo);
-		
-		result.include("ultimoCodigo", ultimoTitulo.getId());
-		
-		//0 1 2 3 4
-		//1 2 3 4 5
+		result.include("titulos", TituloDAO.get());
 	}
 }
