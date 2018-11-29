@@ -15,7 +15,6 @@ public class TituloController {
 	}
 	
 	public void add() {
-		
 	}
 	
 	public void incluir(Titulo titulo) {
