@@ -2,37 +2,49 @@ package controller;
 
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import model.dao.TituloDAO;
+import model.dao.database.DatabaseUtil;
+import model.dao.database.TituloDAO;
 import model.entity.Titulo;
 
 @Resource
 public class TituloController {
 	
 	private Result result;
+	private DatabaseUtil databaseUtil;
+	private TituloDAO tituloDAO;
 	
 	public TituloController(Result result) {
-		this.result = result;		
+		this.result = result;
+		databaseUtil = databaseUtil.getInstanciaUnica();
+		tituloDAO = new TituloDAO(databaseUtil.getParametros());
 	}
 	
 	public void add() {
 	}
 	
-	public void incluir(Titulo titulo) {
-		TituloDAO.add(titulo);
-		
-		System.out.println("Título incluido com sucesso!");
-	}	
-	
-	public void exibir(String descricao) {
-		for (Titulo titulo : TituloDAO.get()) {
-			if (titulo.getDescricao().equals(descricao)) {
-				result.include("titulo", titulo);
-				break;
-			}
+	public void save(Titulo titulo) {
+		if (titulo.getId() == null) {
+			tituloDAO.add(titulo);
+			System.out.println("Título incluido com sucesso!");
+		} else {
+			tituloDAO.update(titulo);
+			System.out.println("Título alterado com sucesso!");
 		}
+		result.redirectTo(this).listagem();
+	}
+	
+	public void exibir(Integer id) {
+		Titulo titulo = tituloDAO.consultar(id);
+		result.include("titulo", titulo);
+	}
+	
+	public void excluir(Integer id) {
+		tituloDAO.delete(id);
+		result.redirectTo(this).listagem();
 	}
 	
 	public void listagem() {
-		result.include("titulos", TituloDAO.get());
+		
 	}
+	
 }
